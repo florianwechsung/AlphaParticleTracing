@@ -1,0 +1,75 @@
+\documentclass[a4]{article} 
+\usepackage{color}
+\usepackage{amsmath}
+\usepackage{graphicx}
+%\usepackage{mathptmx} 
+\usepackage[left=2cm,top=2cm,right=3cm,bottom=2cm]{geometry}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+%\usepackage{stmaryrd}
+\usepackage{enumerate} 
+\newcommand{\Lim}[1]{\raisebox{0.5ex}{\scalebox{0.8}{$\displaystyle \lim_{#1}\;$}}}
+
+\begin{document}
+
+\thispagestyle{fancyplain}
+\fancyhead[L]{\Large \textbf{Magnetic field for tokamak equilibrium and alpha particle trajectories}}
+
+In these notes, we will construct a simple and exact magnetic equilibrium configuration, which we can use for computing alpha particle trajectories. Although self-contained, these notes are relatively short. For more details, we refer the reader to: Antoine J. Cerfon and Jeffrey P. Freidberg, ``One size fits all" analytic solutions to the Grad-Shafranov equation, \textit{Physics of Plasmas} \textbf{17}, 032502 (2010)
+
+\section{Magnetic equilibrium}
+For axisymmetric equilibria, the magnetic field can be written as
+\begin{equation}
+\mathbf{B} = \frac{F(\Psi)}{R}\mathbf{e}_{\phi}+\frac{\nabla\Psi}{R}\times\mathbf{e}_{\phi}
+\end{equation}
+where $\Psi$ is the flux function, whose level sets are the surfaces on which the magnetic field is everywhere tangent, and $(R,\phi,Z)$ is the natural coordinate system associated with the toroidal geometry. The central idea of these notes is that we can construct simple analytic solutions $\Psi$ for magnetohydrodynamic equilibrium with special profiles, known as Solov'ev profiles, such that
+\begin{equation}
+\frac{1}{2}\frac{dF^2}{d\Psi}=-A
+\end{equation}
+so that
+\begin{equation}
+F(\Psi)=\sqrt{R_{\mathrm{in}}^2 B_{\mathrm{in}}^2-2A\Psi}
+\end{equation}
+where $R_{\mathrm{in}}$ is the radial location of the last closed flux surface, corresponding to $\Psi = 0$, at the inboard midplane, and $B_{\mathrm{in}}$ is the value of the toroidal field at this location. For physically relevant flux surfaces with sufficient geometric flexibility (at least for the time being), corresponding to Solov'ev profiles, we look at flux functions of the form:
+\begin{equation}
+\Psi(R,Z)=(1-A)\frac{R^4}{8}+A\left(\frac{R^2}{2}\ln R-\frac{R^4}{8}\right)+c_{1}+c_{2}R^2+c_{3}(R^4-4R^2Z^2)
+\end{equation}
+where the free coefficients $c_{1}$, $c_{2}$, and $c_{3}$ are found by applying the constraints
+\begin{equation}
+\Psi(R_{\mathrm{out}},0) = 0\;\;\;,\;\;\;\Psi(R_{\mathrm{in}},0) = 0\;\;\;,\;\;\; \Psi(R_{\mathrm{top}},R_{\mathrm{top}}) = 0\label{eq:constraints}
+\end{equation}
+where $R_{\mathrm{in}}$ is the major radius at the inboard midplane, and $(R_{\mathrm{top}} , Z_{\mathrm{top}})$ are the coordinates of the point at
+the maximum height on the last closed surface, $\Psi = 0$ (or an approximation thereof, since we do not impose conditions on the slope of $\Psi$ at the top in this simple case). Imposing the constraints (\ref{eq:constraints}) yields a linear
+system for $(c_{1}, c_{2}, c_{3})$ , which is readily solved\footnote{A. Pataki, A.J. Cerfon, J.P. Freidberg, L.Greengard, M. O'Neil, ``A fast, high-order solver for the Grad-Shafranov equation", \textit{Journal of Computational Physics} \textbf{243}, 28 (2013)}.
+Once solved, we can evaluate $\Psi$ everywhere, and thus can evaluate the magnetic field $\mathbf{B}$ everywhere, which is needed to compute the particle trajectories. The components of $\mathbf{B}$ in cylindrical coordinates are
+\begin{align}
+&B_{R}=-\frac{1}{R}\frac{\partial\Psi}{\partial Z}=-8c_{3}RZ\notag\\
+&B_{\phi}=\frac{F(\Psi)}{R}\\
+&B_{Z}=\frac{1}{R}\frac{\partial\Psi}{\partial R}=(1-A)\frac{R^2}{2}+A(\ln R-\frac{R^2}{2}+\frac{1}{2})+2c_{2}+4c_{3}(R^2-2Z^2)\notag
+\end{align}
+
+\section{Alpha particle trajectories}
+The motion of alpha particles, with electric charge $q=2e\approx 3.20\cdot 10^{-19}\;\mbox{C}$ and mass $m\approx 6.64\cdot 10^{-27}\;\mbox{kg}$ is given by
+\begin{equation}
+m\frac{d\mathbf{v}}{dt}=q\mathbf{v}\times\mathbf{B}
+\end{equation}
+In the units in which the magnetic field is expressed for our numerical solver, this can be rewritten as
+\begin{equation}
+\frac{d\mathbf{v}}{dt}=\omega_{c}\mathbf{v}\times\mathbf{B}\;\;\;,\;\;\;\mbox{with}\;\;\omega_{c}\approx 4.82\cdot 10^7\;\mbox{s}^{-1}
+\end{equation}
+In cylindrical coordinates, this vector equation takes the form of the following coupled ordinary differential equations:
+\begin{align}
+&\ddot{R}-R\dot{\phi}^2=\omega_{c}(R\dot{\phi}B_{Z}-\dot{Z}B_{\phi})\notag\\
+&R\ddot{\phi}+2\dot{R}\dot{\phi}=\omega_{c}(\dot{Z}B_{R}-\dot{R}B_{Z})\label{eq:trajectories}\\
+&\ddot{Z}=\omega_{c}(\dot{R}B_{\phi}-R\dot{\phi}B_{R})\notag
+\end{align}
+For fusion applications, these ordinary differential equations have to be solved up to a time of $\sim\; 200\;\mbox{ms}$, which is challenging given the very high frequency of the motion, determined by $\omega_{c}$.
+
+\vspace{1em}
+Finally, for illustrative purposes, in the code I am sharing with you, I computed field line trajectories, to illustrate how one may solve coupled nonlinear ordinary differential equations with the magnetic field given in these notes. The field line trajectories are given by
+\begin{align}
+&\frac{dR}{Rd\phi}=\frac{B_{R}}{B_{\phi}}\qquad,\qquad \frac{dZ}{Rd\phi}=\frac{B_{Z}}{B_{\phi}}\notag\\
+\Leftrightarrow\;\;&\frac{dR}{d\phi}=-\frac{R}{F}\frac{\partial\Psi}{\partial Z}\qquad,\qquad \frac{dZ}{d\phi}=\frac{R}{F}\frac{\partial\Psi}{\partial R}\label{eq:fieldlines}
+\end{align}
+I emphasize the fact that one does not need to solve the coupled ordinary differential equations in Eq.(\ref{eq:fieldlines}) to compute the particle trajectories in Eq.(\ref{eq:trajectories}). They are simply meant as an elementary example of this type of calculations.
+\end{document}
