@@ -43,7 +43,7 @@ the maximum height on the last closed surface, $\Psi = 0$ (or an approximation t
 system for $(c_{1}, c_{2}, c_{3})$ , which is readily solved\footnote{A. Pataki, A.J. Cerfon, J.P. Freidberg, L.Greengard, M. O'Neil, ``A fast, high-order solver for the Grad-Shafranov equation", \textit{Journal of Computational Physics} \textbf{243}, 28 (2013)}.
 Once solved, we can evaluate $\Psi$ everywhere, and thus can evaluate the magnetic field $\mathbf{B}$ everywhere, which is needed to compute the particle trajectories. The components of $\mathbf{B}$ in cylindrical coordinates are
 \begin{align}
-&B_{R}=-\frac{1}{R}\frac{\partial\Psi}{\partial Z}=-8c_{3}RZ\notag\\
+&B_{R}=-\frac{1}{R}\frac{\partial\Psi}{\partial Z}=8c_{3}RZ\notag\\
 &B_{\phi}=\frac{F(\Psi)}{R}\\
 &B_{Z}=\frac{1}{R}\frac{\partial\Psi}{\partial R}=(1-A)\frac{R^2}{2}+A(\ln R-\frac{R^2}{2}+\frac{1}{2})+2c_{2}+4c_{3}(R^2-2Z^2)\notag
 \end{align}
