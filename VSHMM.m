@@ -6,7 +6,6 @@ ts = [0];
 ys = [y0'];
 %
 options = optimset('Jacobian', 'on', 'Display','off');
-
 %
 y = zeros(size(y0));
 y(:) = y0(:);
