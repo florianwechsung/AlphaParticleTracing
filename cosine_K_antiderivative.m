@@ -3,4 +3,3 @@ function [K_integral] = cosine_K_antiderivative(t,Delta_T)
 %   Detailed explanation goes here
 K_integral = Delta_T * (t/Delta_T - (1/(2*pi)) * sin(2*pi*(t/Delta_T)));
 end
-
