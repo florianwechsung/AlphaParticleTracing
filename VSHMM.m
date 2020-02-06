@@ -4,7 +4,10 @@ function [ts,ys] = VSHMM(rhs_full,rhs_slow_only, y0, alpha, Delta_T, delta_t, ni
 
 ts = [0];
 ys = [y0'];
+%
+options = optimset('Jacobian', 'on', 'Display','off');
 
+%
 y = zeros(size(y0));
 y(:) = y0(:);
 t = 0;
@@ -26,7 +29,7 @@ for i=1:niter
         sprintf('tstep=%f', tstep)
         
         
-        h_t = alpha * delta_t * cosine_K(cosine_K_antiderivative_inverse(mod(t, Delta_T), Delta_T), Delta_T);
+        h_t = alpha * delta_t * cosine_K(cosine_K_antiderivative_inverse(mod(t, Delta_T), Delta_T, options), Delta_T);
         tstep = min(h_t, Delta_T-tlocal);
         %tstep = h_t;
 %         y = y + tstep * rhs_slow_only(t, y);
